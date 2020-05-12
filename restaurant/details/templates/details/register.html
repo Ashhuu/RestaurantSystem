@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+<!-- Start of Form -->
+<section class="testimonial py-5" id="testimonial">
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-4 py-5 bg-primary text-white text-center " style="background-color:orange!important">
+                <div class=" ">
+                    <div class="card-body">
+                        <img src="http://www.ansonika.com/mavia/img/registration_bg.svg" style="width:30%">
+                        <h2 class="py-3">Registration</h2>
+                        <p>Welcome to the Registration Page. You can register here.<br><a class="nav-link" href="{% url 'login' %}">Go to Login Page</a>
+
+</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 py-5 border">
+                <h4 class="pb-4">Please fill with your details</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Full Name: </label>
+                            {{ form.name }}
+<!--                          <input id="Full Name" name="Full Name" placeholder="Full Name" class="form-control" type="text">-->
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Email: </label>
+                            {{ form.email }}
+<!--                          <input type="email" class="form-control" id="inputEmail4" placeholder="Email">-->
+                        </div>
+                      </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Username: </label>
+                            {{ form.username }}
+<!--                            <input id="Mobile No." name="Mobile No." placeholder="Mobile No." class="form-control" required="required" type="text">-->
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Password: </label>
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label>Type of Account: </label>
+                            {{ form.type }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>About Yourself: </label>
+                        <div class="form-group col-md-12">
+                            {{ form.details }}
+<!--                                  <textarea id="comment" name="comment" cols="40" rows="5" class="form-control"></textarea>-->
+                        </div>
+                    </div>
+
+<!--                    <div class="form-row">-->
+<!--                        <div class="form-group">-->
+<!--                            <div class="form-group">-->
+<!--                                <div class="form-check">-->
+<!--                                  <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>-->
+<!--                                  <label class="form-check-label" for="invalidCheck2">-->
+<!--                                    <small>By clicking Submit, you agree to our Terms & Conditions, Visitor Agreement and Privacy Policy.</small>-->
+<!--                                  </label>-->
+<!--                                </div>-->
+<!--                              </div>-->
+
+<!--                          </div>-->
+<!--                    </div>-->
+
+                    <div class="form-row">
+                        <input type="submit" class="btn btn-warning">
+                    </div>
+                </form>
+                {% if error is not None %}
+                <small style="color:red">{{ error }}</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<!--End of Form-->
+
+</body>
+</html>

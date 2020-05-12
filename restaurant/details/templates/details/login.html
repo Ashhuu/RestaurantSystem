@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+<!-- Start of Form -->
+<section class="testimonial py-5" id="testimonial">
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-4 py-5 bg-primary text-white text-center " style="background-color:orange!important">
+                <div class=" ">
+                    <div class="card-body">
+                        <img src="http://www.ansonika.com/mavia/img/registration_bg.svg" style="width:30%">
+                        <h2 class="py-3">Registration</h2>
+                        <p>Welcome to the Login Page. You can login here.<br><a class="nav-link" href="{% url 'register' %}">Go to Registeration Page</a>
+
+</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 py-5 border">
+                <h4 class="pb-4">Please fill with your details</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Username: </label>
+                            {{ form.username }}
+<!--                            <input id="Mobile No." name="Mobile No." placeholder="Mobile No." class="form-control" required="required" type="text">-->
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Password: </label>
+                            {{ form.password }}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <input type="submit" class="btn btn-warning" value="Login">
+                    </div>
+                </form>
+                {% if error is not None %}
+                <small style="color:red">{{ error }}</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<!--End of Form-->
+
+</body>
+</html>
