@@ -20,6 +20,41 @@
 
   </head>
   <body>
+<!--<script>-->
+<!--        document.getElementById("addtoCart").onclick = sayHello()-->
+<!--        function sayHello(){ alert("Hello"); }-->
+<!--      function addItems(id) {-->
+<!--      var x = getCookie(id)-->
+<!--      if x == null {-->
+<!--        var y = 1-->
+<!--        document.cookie = id + " = " + y;-->
+<!--       }-->
+<!--       else {-->
+<!--        var y = x + 1-->
+<!--        document.cookie = id + "=" + y;-->
+<!--       }-->
+<!--  }-->
+<!--  function getCookie(name) {-->
+<!--    // Split cookie string and get all individual name=value pairs in an array-->
+<!--    var cookieArr = document.cookie.split(";");-->
+
+<!--    // Loop through the array elements-->
+<!--    for(var i = 0; i < cookieArr.length; i++) {-->
+<!--        var cookiePair = cookieArr[i].split("=");-->
+
+<!--        /* Removing whitespace at the beginning of the cookie name-->
+<!--        and compare it with the given string */-->
+<!--        if(name == cookiePair[0].trim()) {-->
+<!--            // Decode the cookie value and return-->
+<!--            return decodeURIComponent(cookiePair[1]);-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Return null if not found-->
+<!--    return null;-->
+<!--}-->
+<!--    </script>-->
+
 
     <header role="banner">
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -69,8 +104,8 @@
         <div class="container" >
           <div class="row slider-text align-items-center justify-content-center">
             <div class="col-md-8 text-center col-sm-12 ">
-              <h1 data-aos="fade-up">Our Menu</h1>
-              <p class="mb-5" data-aos="fade-up" data-aos-delay="100">Please select as many items from below.</p>
+              <h1 data-aos="fade-up">Your Cart</h1>
+              <p class="mb-5" data-aos="fade-up" data-aos-delay="100">You can confirm your order here.</p>
               <p data-aos="fade-up" data-aos-delay="200"><a href="#menu-container" class="btn btn-white btn-outline-white">Get Started</a></p>
             </div>
           </div>
@@ -88,105 +123,88 @@
         <div class="container-fluid">
           <div class="row" data-aos="fade">
             <div class="col-md-12 text-center heading-wrap" id="menu-container">
-              <h2>Please select from below</h2>
+              <h2>Review your order</h2>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="container">
-        {% for items in menuitems %}
-        <div class="row no-gutters">
-          <div class="col-md-6">
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('{{items.0.item_img}}');" data-aos="fade"></div>
-              <div class="text order-1">
-                <h3>{{items.0.item_name}}</h3>
-                <p>{{items.0.item_desc}}</p>
-                <p class="text-primary h5">{{items.0.item_price}}</p>
-                {% if not user.is_authenticated %}
-                <a href="{% url 'login' %}" class="btn btn-dark btn-sm">Add</a>
-                {% else %}
-                <button itemid="{{items.0.item_id}}" onclick="myFunction(this.getAttribute('itemid'))" class="btn btn-dark btn-sm">Add</button>
-                {% endif %}
-                <button id="{{items.0.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
-                <p id="o-qt-{{items.0.item_id}}" class="small" style="color:green;"></p>
-              </div>
-
+      <div class="container" style="border: 2px;border-style: solid;padding: 3% 5%;">
+        <div class="row">
+            <div class="col-8">
+                <h4 class="heading-wrap">Items</h4>
+                {% for item in order %}
+                <p>{{ item.name }} x {{item.quantity}} qt</p>
+                {% endfor %}
+                <a href="{% url 'menu' %}">Go back to modify your Order</a>
             </div>
-
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_1.jpg');" data-aos="fade"></div>
-              <div class="text">
-                <h3>{{items.1.item_name}}</h3>
-                <p>{{items.1.item_desc}}</p>
-                <p class="text-primary h5">{{items.1.item_price}}</p>
-                {% if not user.is_authenticated %}
-                <a href="{% url 'login' %}" class="btn btn-dark btn-sm">Add</a>
-                {% else %}
-                <button itemid="{{items.1.item_id}}" onclick="myFunction(this.getAttribute('itemid'))" class="btn btn-dark btn-sm">Add</button>
-                {% endif %}
-                <button id="{{items.1.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
-                <p id="o-qt-{{items.1.item_id}}" class="small" style="color:green;"></p>
-
-              </div>
-
+            <div class="col-4" style="border-left-width: 1px;border-left-style: double;">
+                <h4 class="heading-wrap">Total Price</h4>
+                {% for item in order %}
+                <p>{{ item.symbol }}{{ item.price }}</p>
+                {% endfor %}
+                <h3 class="heading-wrap">{{ order.0.symbol }}{{ total }} Payable</h3>
             </div>
-
-          </div>
-
-          <div class="col-md-6">
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('img/dishes_2.jpg');" data-aos="fade"></div>
-              <div class="text order-1">
-                <h3>{{items.2.item_name}}</h3>
-                <p>{{items.2.item_desc}}</p>
-                <p class="text-primary h5">{{items.2.item_price}}</p>
-                {% if not user.is_authenticated %}
-                <a href="{% url 'login' %}" class="btn btn-dark btn-sm">Add</a>
-                {% else %}
-                <button itemid="{{items.2.item_id}}" onclick="myFunction(this.getAttribute('itemid'))" class="btn btn-dark btn-sm">Add</button>
-                {% endif %}
-                <button id="{{items.2.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
-                <p id="o-qt-{{items.2.item_id}}" class="small" style="color:green;"></p>
-
-              </div>
-
-            </div>
-
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_3.jpg');" data-aos="fade"></div>
-              <div class="text">
-                <h3>{{items.3.item_name}}</h3>
-                <p>{{items.3.item_desc}}</p>
-                <p class="text-primary h5">{{items.3.item_price}}</p>
-                {% if not user.is_authenticated %}
-                <a href="{% url 'login' %}" class="btn btn-dark btn-sm">Add</a>
-                {% else %}
-                <button itemid="{{items.3.item_id}}" onclick="myFunction(this.getAttribute('itemid'))" class="btn btn-dark btn-sm">Add</button>
-                {% endif %}
-                <button id="{{items.3.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
-                <p id="o-qt-{{items.3.item_id}}" class="small" style="color:green;"></p>
-
-              </div>
-
-            </div>
-
-
-          </div>
 
         </div>
-
-        {% endfor %}
-
-
-
-      </div><br>
-      <center><div class="center-block">
-              <a class="btn btn-dark" style="text-align:center;color:white;" href="{% url 'cart' %}">Proceed to Checkout</a>
+        <center><div class="center-block">
+              <button class="btn btn-dark" style="text-align:center;color:white;" onclick="Test();">Pay</button>
       </div></center>
-    </section> <!-- .section -->
 
+<!--        <div class="row no-gutters">-->
+<!--          <div class="col-md-6">-->
+<!--            <div class="sched d-block d-lg-flex">-->
+<!--              <div class="bg-image order-2" style="background-image: url('img/dishes_4.jpg');" data-aos="fade"></div>-->
+<!--              <div class="text order-1">-->
+<!--                <h3>Grilled Caesar salad, shaved reggiano</h3>-->
+<!--                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>-->
+<!--                <p class="text-primary h3">$12.00</p>-->
+<!--              </div>-->
+
+<!--            </div>-->
+
+<!--            <div class="sched d-block d-lg-flex">-->
+<!--              <div class="bg-image" style="background-image: url('img/dishes_1.jpg');" data-aos="fade"></div>-->
+<!--              <div class="text">-->
+<!--                <h3>Spicy Calamari and beans</h3>-->
+<!--                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>-->
+<!--                <p class="text-primary h3">$12.00</p>-->
+
+<!--              </div>-->
+
+<!--            </div>-->
+
+<!--          </div>-->
+
+<!--          <div class="col-md-6">-->
+<!--            <div class="sched d-block d-lg-flex">-->
+<!--              <div class="bg-image order-2" style="background-image: url('img/dishes_2.jpg');" data-aos="fade"></div>-->
+<!--              <div class="text order-1">-->
+<!--                <h3>Bacon wrapped wild gulf prawns</h3>-->
+<!--                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>-->
+<!--                <p class="text-primary h3">$18.00</p>-->
+
+<!--              </div>-->
+
+<!--            </div>-->
+
+<!--            <div class="sched d-block d-lg-flex">-->
+<!--              <div class="bg-image" style="background-image: url('img/dishes_3.jpg');" data-aos="fade"></div>-->
+<!--              <div class="text">-->
+<!--                <h3>Seared ahi tuna fillet*, honey-ginger sauce</h3>-->
+<!--                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>-->
+<!--                <p class="text-primary h3">$16.00</p>-->
+
+<!--              </div>-->
+
+<!--            </div>-->
+
+<!--          </div>-->
+<!--        </div>-->
+
+
+      </div>
+    </section> <!-- .section -->
 
     <footer class="site-footer" role="contentinfo">
       <div class="container mb-5">
@@ -279,62 +297,13 @@
     <script src="{% static 'js/aos.js' %}"></script>
     <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'js/magnific-popup-options.js' %}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script type="text/javascript">
-    document.onload = deleteAllCookies();
-
-  function deleteAllCookies() {
-    var cookies = document.cookie.split(";");
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-    }
-  }
-
-  function myFunction(id) {
-      var x = getCookie(id)
-
-      if (x == null) {
-        var y = 1
-        document.cookie = id + " = " + y + "; path=/";
-       }
-       else {
-        var y = parseInt(x, 10) + 1
-        document.cookie = id + "=" + y + "; path=/";
-       }
-       document.getElementById("o-qt-"+id).innerHTML = "You currently have " + y +" of this in your order"
-       document.getElementById(id).hidden = false
-  }
-
-
-  function minus(id) {
-    var x = getCookie(id)
-
-      if (x != null) {
-        var y = parseInt(x, 10) - 1
-        document.cookie = id + "=" + y + "; path=/";
-       }
-      document.getElementById("o-qt-"+id).innerHTML = "You currently have "+ y +" of this in your order"
-      if (y == 0) {
-        document.getElementById(id).hidden = true
+      function Test() {
+        swal("Payment Received Successfully!", "Your order has been placed! You will be redirected to your order", "success");
+        setTimeout(() => { window.location="{% url 'order' %}"; }, 2000);
       }
-  }
-
-
-  function getCookie(name) {
-    var cookieArr = document.cookie.split(";");
-
-    for (var i = 0; i < cookieArr.length; i++) {
-        var cookiePair = cookieArr[i].split("=");
-
-        if (name == cookiePair[0].trim()) {
-            return decodeURIComponent(cookiePair[1]);
-        }
-    }
-    return null;
-  }
 
 </script>
   </body>

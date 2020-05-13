@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+    body {
+      background-image: url({% static 'img/hero_2.jpg' %});
+    }
+</style>
+</head>
+<body>
+
+<!-- Start of Form -->
+<section class="testimonial py-5" id="testimonial">
+    <div class="container">
+        <div class="row ">
+            <div class="col-md-4 py-5 bg-primary text-white text-center " style="background-color:orange!important">
+                <div class=" ">
+                    <div class="card-body">
+                        <img src="http://www.ansonika.com/mavia/img/registration_bg.svg" style="width:30%">
+
+                        <h2 class="py-3">View your Orders</h2>
+                        <p>You can view all your orders here.<br>
+                            <a class="nav-link" href="{% url 'home' %}">Go Back to Homepage</a>
+
+</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 py-5 border" style="background-color: antiquewhite!important;">
+<!-- Customer Side -->
+            {% if user.type == "customer" %}
+
+                <h4 class="pb-4">Pending Orders</h4>
+                {% if pending is True %}
+                <table class="table table-borderless">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Order Details</th>
+      <th scope="col">Order Total</th>
+      <th scope="col">Placed At</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for items in order %}
+  {% if items.order_status == "Pending" %}
+    <tr>
+      <th scope="row">{{ items.oid }}</th>
+      <td>{{ items.order_items }}</td>
+      <td>{{ items.order_total }}</td>
+      <td>{{ items.order_time }}</td>
+      <td style="color:{{items.color}}">{{ items.order_status }}</td>
+    </tr>
+  {% endif %}
+  {% endfor %}
+  </tbody>
+  </table>
+  {% else %}
+                <p>No Pending Orders</p></br>
+                                <p>{{ pending }}</p>
+
+  {% endif %}
+
+<!-- Customer Completed Side-->
+
+  <h4 class="pb-4">Completed Orders</h4>
+  {% if completed is True %}
+  <table class="table table-borderless">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Order Details</th>
+      <th scope="col">Order Total</th>
+      <th scope="col">Placed At</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for items in order %}
+  {% if items.order_status == "Completed" %}
+    <tr>
+      <th scope="row">{{ items.oid }}</th>
+      <td>{{ items.order_items }}</td>
+      <td>{{ items.order_total }}</td>
+      <td>{{ items.order_time }}</td>
+      <td style="color:{{items.color}}">{{ items.order_status }}</td>
+    </tr>
+  {% endif %}
+  {% endfor %}
+  </tbody>
+  </table>
+  {% else %}
+                <p>No Completed Orders to show</p></br>
+  {% endif %}
+  </div>
+
+
+<!-- Manager Side -->
+            {% elif user.type == "manager" %}
+                <h4 class="pb-4">Pending Orders</h4>
+                  {% if pending is True %}
+                <table class="table table-borderless">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Order Details</th>
+      <th scope="col">Order Total</th>
+      <th scope="col">Placed At</th>
+      <th scope="col">Status</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for items in allOrders %}
+  {% if items.order_status == "Pending" %}
+    <tr>
+      <th scope="row">{{ items.oid }}</th>
+      <td>{{ items.order_items }}</td>
+      <td>{{ items.order_total }}</td>
+      <td>{{ items.order_time }}</td>
+      <td style="color:{{items.color}}">{{ items.order_status }}</td>
+      <td><a class="btn btn-warning btn-sm" style="color:white" href="{% url 'orderid' items.oid %}">Mark as Complete</a></td>
+    </tr>
+
+  {% endif %}
+  {% endfor %}
+  </tbody>
+  </table>
+                  {% else %}
+                  <p>No Pending orders</p><br>
+                  {% endif %}
+
+
+ <!--Manager Completed Orders-->
+
+  <h4 class="pb-4">Completed Orders</h4>
+  {% if completed is True %}
+  <table class="table table-borderless">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Order Details</th>
+      <th scope="col">Order Total</th>
+      <th scope="col">Placed At</th>
+      <th scope="col">Status</th>
+      <th scope="col">Completed At</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for items in allOrders %}
+  {% if items.order_status == "Completed" %}
+    <tr>
+      <th scope="row">{{ items.oid }}</th>
+      <td>{{ items.order_items }}</td>
+      <td>{{ items.order_total }}</td>
+      <td>{{ items.order_time }}</td>
+      <td style="color:{{items.color}}">{{ items.order_status }}</td>
+      <td>{{ items.completion_time }}</td>
+    </tr>
+
+  {% endif %}
+  {% endfor %}
+  </tbody>
+  </table>
+  {% else %}
+                  <p>No Pending orders</p><br>
+                  {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    document.onload = deleteAllCookies();
+
+  function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    }
+  }
+</script>
+</body>
+</html>

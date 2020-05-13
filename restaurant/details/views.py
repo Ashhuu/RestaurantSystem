@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
 
+
 def register(request):
     form = forms.Register()
     error = None
@@ -23,25 +24,32 @@ def register(request):
                 data['password'] = make_password(data['password'])
                 ud = models.UserDetails(**data)
                 ud.save()
-                print("Saved")
     return render(request, 'details/register.html', {'form': form, 'error': error})
 
 
 def signin(request):
     error = None
     if request.user.is_authenticated:
-        error = "Logged in already"
+        return redirect("home")
     form = forms.Login()
     if request.method == "POST":
         form = forms.Login(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            print(data)
             user = authenticate(request, username=data['username'], password=data['password'])
-            print(user)
             if user is not None:
                 login(request, user)
-                error = "Successful Login"
+                return redirect('home')
             else:
                 error = "The username or password is wrong"
     return render(request, 'details/login.html', {'form': form, 'error': error})
+
+
+def signout(request):
+    logout(request)
+    previous_url = request.META.get('HTTP_REFERER')
+    print(previous_url)
+    if previous_url:
+        return redirect(previous_url)
+    else:
+        return redirect('home')
