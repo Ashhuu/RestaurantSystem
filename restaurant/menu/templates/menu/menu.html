@@ -53,7 +53,11 @@
                 {% if not user.is_authenticated %}
                 <a class="nav-link" href="{% url 'register' %}">Login/Register</a>
                 {% else %}
+                {% if user.type == "customer" %}
                 <a class="nav-link" href="{% url 'order' %}">View Your Orders</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'order' %}">Review Orders</a>
+                {% endif %}
                 {% endif %}
               </li>
             </ul>
@@ -99,7 +103,9 @@
         <div class="row no-gutters">
           <div class="col-md-6">
             <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('{{items.0.item_img}}');" data-aos="fade"></div>
+              {% with img=items.0.item_img.url %}
+              <div class="bg-image order-2" style="background-image: url({{img}});" data-aos="fade"></div>
+              {% endwith %}
               <div class="text order-1">
                 <h3>{{items.0.item_name}}</h3>
                 <p>{{items.0.item_desc}}</p>
@@ -114,10 +120,13 @@
               </div>
 
             </div>
-
+          </div>
+          <div class="col-md-6">
             <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_1.jpg');" data-aos="fade"></div>
-              <div class="text">
+              {% with img=items.1.item_img.url %}
+              <div class="bg-image order-2" style="background-image: url({{img}});" data-aos="fade"></div>
+              {% endwith %}
+              <div class="text order-1">
                 <h3>{{items.1.item_name}}</h3>
                 <p>{{items.1.item_desc}}</p>
                 <p class="text-primary h5">{{items.1.item_price}}</p>
@@ -128,56 +137,40 @@
                 {% endif %}
                 <button id="{{items.1.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
                 <p id="o-qt-{{items.1.item_id}}" class="small" style="color:green;"></p>
-
               </div>
 
             </div>
-
           </div>
-
+        </div>
+        {% endfor %}
+        {% if innerList is not None %}
+        <div class="row no-gutters">
           <div class="col-md-6">
             <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('img/dishes_2.jpg');" data-aos="fade"></div>
+              {% with img=innerList.0.item_img.url %}
+              <div class="bg-image order-2" style="background-image: url('{{img}}');" data-aos="fade">
+              </div>
+              {% endwith %}
               <div class="text order-1">
-                <h3>{{items.2.item_name}}</h3>
-                <p>{{items.2.item_desc}}</p>
-                <p class="text-primary h5">{{items.2.item_price}}</p>
+                <h3>{{innerList.0.item_name}}</h3>
+                <p>{{innerList.0.item_desc}}</p>
+                <p class="text-primary h5">{{innerList.0.item_price}}</p>
                 {% if not user.is_authenticated %}
                 <a href="{% url 'login' %}" class="btn btn-dark btn-sm">Add</a>
                 {% else %}
-                <button itemid="{{items.2.item_id}}" onclick="myFunction(this.getAttribute('itemid'))" class="btn btn-dark btn-sm">Add</button>
+                <button itemid="{{innerList.0.item_id}}" onclick="myFunction(this.getAttribute('itemid'))" class="btn btn-dark btn-sm">Add</button>
                 {% endif %}
-                <button id="{{items.2.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
-                <p id="o-qt-{{items.2.item_id}}" class="small" style="color:green;"></p>
-
+                <button id="{{innerList.0.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
+                <p id="o-qt-{{innerList.0.item_id}}" class="small" style="color:green;"></p>
               </div>
 
             </div>
-
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_3.jpg');" data-aos="fade"></div>
-              <div class="text">
-                <h3>{{items.3.item_name}}</h3>
-                <p>{{items.3.item_desc}}</p>
-                <p class="text-primary h5">{{items.3.item_price}}</p>
-                {% if not user.is_authenticated %}
-                <a href="{% url 'login' %}" class="btn btn-dark btn-sm">Add</a>
-                {% else %}
-                <button itemid="{{items.3.item_id}}" onclick="myFunction(this.getAttribute('itemid'))" class="btn btn-dark btn-sm">Add</button>
-                {% endif %}
-                <button id="{{items.3.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
-                <p id="o-qt-{{items.3.item_id}}" class="small" style="color:green;"></p>
-
-              </div>
-
-            </div>
-
-
           </div>
-
         </div>
+        {% endif %}
+      </div>
 
-        {% endfor %}
+
 
 
 

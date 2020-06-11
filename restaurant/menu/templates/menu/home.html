@@ -17,6 +17,12 @@
     <link rel="stylesheet" href="{% static 'fonts/fontawesome/css/font-awesome.min.css' %}">
     <link href="{% static 'fonts/flaticon/font/flaticon.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+      .img-size {
+        weight:600px;
+        height:400px;
+      }
+    </style>
   </head>
   <body>
     <header role="banner">
@@ -51,7 +57,11 @@
                 {% if not user.is_authenticated %}
                 <a class="nav-link" href="{% url 'register' %}">Login/Register</a>
                 {% else %}
+                {% if user.type == "customer" %}
                 <a class="nav-link" href="{% url 'order' %}">View Your Orders</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'order' %}">Review Orders</a>
+                {% endif %}
                 {% endif %}
               </li>
             </ul>
@@ -153,7 +163,7 @@
     </section>
 
     <section class="section ">
-
+      {% if specialItems is not None %}
       <div class="clearfix mb-5 pb-5">
         <div class="container-fluid mb-5">
           <div class="row" data-aos="fade">
@@ -163,36 +173,18 @@
           </div>
         </div>
         <div class="owl-carousel centernonloop">
-          <a href="#" class="item-dishes" data-aos="fade-right" data-aos-delay="100">
+          {% for items in specialItems %}
+          <a href="{% url 'menu' %}" class="item-dishes" data-aos="fade-right" data-aos-delay="100">
             <div class="text">
-              <p class="dishes-price">$11.50</p>
-              <h2 class="dishes-heading">Organic tomato salad, gorgonzola cheese, capers</h2>
+              <p class="dishes-price">{{items.item_price}}</p>
+              <h2 class="dishes-heading">{{items.item_name}}</h2>
             </div>
-            <img src="{% static 'img/dishes_1.jpg' %}" alt="" class="img-fluid">
+            <img src="{{items.item_img.url}}" alt="" class="img-fluid img-size">
           </a>
-          <a href="#" class="item-dishes" data-aos="fade-right" data-aos-delay="200">
-            <div class="text">
-              <p class="dishes-price">$12.00</p>
-              <h2 class="dishes-heading">Baked broccoli</h2>
-            </div>
-            <img src="{% static 'img/dishes_2.jpg' %}" alt="" class="img-fluid">
-          </a>
-          <a href="#" class="item-dishes" data-aos="fade-right" data-aos-delay="300">
-            <div class="text">
-              <p class="dishes-price">$11.00</p>
-              <h2 class="dishes-heading">Spicy meatballs</h2>
-            </div>
-            <img src="{% static 'img/dishes_3.jpg' %}" alt="" class="img-fluid">
-          </a>
-          <a href="#" class="item-dishes" data-aos="fade-right" data-aos-delay="400">
-            <div class="text">
-              <p class="dishes-price">$12.00</p>
-              <h2 class="dishes-heading">Eggplant parmigiana</h2>
-            </div>
-            <img src="{% static 'img/dishes_4.jpg' %}" alt="" class="img-fluid">
-          </a>
+          {% endfor %}
         </div>
       </div>
+      {% endif %}
 
     </section> <!-- .section -->
 
@@ -209,108 +201,63 @@
       </div>
 
       <div class="container">
-
+        {% for items in menuitems %}
         <div class="row no-gutters">
           <div class="col-md-6">
             <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('img/dishes_4.jpg');" data-aos="fade"></div>
+              {% with img=items.0.item_img.url %}
+              <div class="bg-image order-2" style="background-image: url({{img}});" data-aos="fade"></div>
+              {% endwith %}
               <div class="text order-1">
-                <h3>Grilled Caesar salad, shaved reggiano</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$12.00</p>
+                <h3>{{items.0.item_name}}</h3>
+                <p>{{items.0.item_desc}}</p>
+                <p class="text-primary h5">{{items.0.item_price}}</p>
+                <a href="{% url 'menu' %}" class="btn btn-dark btn-sm">Add</a>
+                <button id="{{items.0.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
+                <p id="o-qt-{{items.0.item_id}}" class="small" style="color:green;"></p>
               </div>
 
             </div>
-
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_1.jpg');" data-aos="fade"></div>
-              <div class="text">
-                <h3>Spicy Calamari and beans</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$12.00</p>
-
-              </div>
-
-            </div>
-
           </div>
-
           <div class="col-md-6">
             <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('img/dishes_2.jpg');" data-aos="fade"></div>
+              {% with img=items.1.item_img.url %}
+              <div class="bg-image order-2" style="background-image: url({{img}});" data-aos="fade"></div>
+              {% endwith %}
               <div class="text order-1">
-                <h3>Bacon wrapped wild gulf prawns</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$18.00</p>
-
+                <h3>{{items.1.item_name}}</h3>
+                <p>{{items.1.item_desc}}</p>
+                <p class="text-primary h5">{{items.1.item_price}}</p>
+                <a href="{% url 'menu' %}" class="btn btn-dark btn-sm">Add</a>
+                <button id="{{items.1.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
+                <p id="o-qt-{{items.1.item_id}}" class="small" style="color:green;"></p>
               </div>
 
             </div>
-
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_3.jpg');" data-aos="fade"></div>
-              <div class="text">
-                <h3>Seared ahi tuna fillet*, honey-ginger sauce</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$16.00</p>
-
-              </div>
-
-            </div>
-
           </div>
         </div>
-
+        {% endfor %}
+        {% if innerList is not None %}
         <div class="row no-gutters">
           <div class="col-md-6">
             <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('img/dishes_4.jpg');" data-aos="fade"></div>
+              {% with img=innerList.0.item_img.url %}
+              <div class="bg-image order-2" style="background-image: url('{{img}}');" data-aos="fade">
+              </div>
+              {% endwith %}
               <div class="text order-1">
-                <h3>Grilled Caesar salad, shaved reggiano</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$12.00</p>
+                <h3>{{innerList.0.item_name}}</h3>
+                <p>{{innerList.0.item_desc}}</p>
+                <p class="text-primary h5">{{innerList.0.item_price}}</p>
+                <a href="{% url 'menu' %}" class="btn btn-dark btn-sm">Add</a>
+                <button id="{{innerList.0.item_id}}" onclick="minus(this.getAttribute('id'))" class="btn btn-danger btn-sm" hidden>Remove</button>
+                <p id="o-qt-{{innerList.0.item_id}}" class="small" style="color:green;"></p>
               </div>
 
             </div>
-
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_1.jpg');" data-aos="fade"></div>
-              <div class="text">
-                <h3>Spicy Calamari and beans</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$12.00</p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="col-md-6">
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image order-2" style="background-image: url('img/dishes_2.jpg');" data-aos="fade"></div>
-              <div class="text order-1">
-                <h3>Bacon wrapped wild gulf prawns</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$18.00</p>
-
-              </div>
-
-            </div>
-
-            <div class="sched d-block d-lg-flex">
-              <div class="bg-image" style="background-image: url('img/dishes_3.jpg');" data-aos="fade"></div>
-              <div class="text">
-                <h3>Seared ahi tuna fillet*, honey-ginger sauce</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto illo delectus...</p>
-                <p class="text-primary h3">$16.00</p>
-
-              </div>
-
-            </div>
-
           </div>
         </div>
+        {% endif %}
 
 
       </div>
@@ -382,56 +329,56 @@
       </div>
     </section> <!-- .section -->
 
-    <section class="section  bg-light top-slant-white">
-      <div class="clearfix mb-5 pb-5">
-        <div class="container-fluid">
-          <div class="row" data-aos="fade">
-            <div class="col-md-12 text-center heading-wrap">
-              <h2>Blog</h2>
-              <span class="back-text">Our Blog</span>
-            </div>
-          </div>
-        </div>
-      </div>
+<!--    <section class="section  bg-light top-slant-white">-->
+<!--      <div class="clearfix mb-5 pb-5">-->
+<!--        <div class="container-fluid">-->
+<!--          <div class="row" data-aos="fade">-->
+<!--            <div class="col-md-12 text-center heading-wrap">-->
+<!--              <h2>Blog</h2>-->
+<!--              <span class="back-text">Our Blog</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="blog d-block">
-              <a class="bg-image d-block" href="single.html" style="background-image: url('img/dishes_1.jpg');"></a>
-              <div class="text">
-                <h3><a href="single.html">How To Cook Pasta?</a></h3>
-                <p class="sched-time">
-                  <span><span class="fa fa-calendar"></span> April 22, 2018</span> <br>
-                </p>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+<!--      <div class="container">-->
+<!--        <div class="row">-->
+<!--          <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">-->
+<!--            <div class="blog d-block">-->
+<!--              <a class="bg-image d-block" href="single.html" style="background-image: url('img/dishes_1.jpg');"></a>-->
+<!--              <div class="text">-->
+<!--                <h3><a href="single.html">How To Cook Pasta?</a></h3>-->
+<!--                <p class="sched-time">-->
+<!--                  <span><span class="fa fa-calendar"></span> April 22, 2018</span> <br>-->
+<!--                </p>-->
+<!--                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>-->
 
-                <p><a href="#" class="btn btn-primary btn-sm">Read More</a></p>
+<!--                <p><a href="#" class="btn btn-primary btn-sm">Read More</a></p>-->
 
-              </div>
+<!--              </div>-->
 
-            </div>
-          </div>
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="blog d-block">
-              <a class="bg-image d-block" href="single.html" style="background-image: url('img/dishes_2.jpg');"></a>
-              <div class="text">
-                <h3><a href="single.html">How To Cook Pasta?</a></h3>
-                <p class="sched-time">
-                  <span><span class="fa fa-calendar"></span> April 22, 2018</span> <br>
-                </p>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">-->
+<!--            <div class="blog d-block">-->
+<!--              <a class="bg-image d-block" href="single.html" style="background-image: url('img/dishes_2.jpg');"></a>-->
+<!--              <div class="text">-->
+<!--                <h3><a href="single.html">How To Cook Pasta?</a></h3>-->
+<!--                <p class="sched-time">-->
+<!--                  <span><span class="fa fa-calendar"></span> April 22, 2018</span> <br>-->
+<!--                </p>-->
+<!--                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>-->
 
-                <p><a href="#" class="btn btn-primary btn-sm">Read More</a></p>
+<!--                <p><a href="#" class="btn btn-primary btn-sm">Read More</a></p>-->
 
-              </div>
+<!--              </div>-->
 
-            </div>
-          </div>
-        </div>
-      </div>
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
-    </section> <!-- .section -->
+<!--    </section> &lt;!&ndash; .section &ndash;&gt;-->
 
     <footer class="site-footer" role="contentinfo">
       <div class="container mb-5">

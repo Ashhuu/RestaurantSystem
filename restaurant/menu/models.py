@@ -9,3 +9,4 @@ class Menu(models.Model):
     item_price = models.CharField(max_length=10)
     item_desc = models.TextField()
     item_img = models.ImageField(upload_to='menu/static/img')
+    special = models.BooleanField(default=False)

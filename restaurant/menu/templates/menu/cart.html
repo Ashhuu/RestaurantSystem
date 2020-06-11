@@ -88,7 +88,11 @@
                 {% if not user.is_authenticated %}
                 <a class="nav-link" href="{% url 'register' %}">Login/Register</a>
                 {% else %}
+                {% if user.type == "customer" %}
                 <a class="nav-link" href="{% url 'order' %}">View Your Orders</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'order' %}">Review Orders</a>
+                {% endif %}
                 {% endif %}
               </li>
             </ul>
@@ -98,6 +102,29 @@
       </nav>
     </header>
     <!-- END header -->
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center>
+          <button type="button" class="btn btn-primary btn-lg" onclick="Test();">Pay Online</button><br><br>
+          <button type="button" class="btn btn-primary btn-lg" onclick="Test();">Pay Offline</button>
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
     <div class="slider-wrap">
       <div class="slider-item" style="background-image: url({% static 'img/hero_1.jpg'%});">
 
@@ -148,7 +175,8 @@
 
         </div>
         <center><div class="center-block">
-              <button class="btn btn-dark" style="text-align:center;color:white;" onclick="Test();">Pay</button>
+<!--              <button class="btn btn-dark" style="text-align:center;color:white;" onclick="Test();">Pay</button>-->
+              <button class="btn btn-dark" style="text-align:center;color:white;" data-toggle="modal" data-target="#exampleModal">Pay</button>
       </div></center>
 
 <!--        <div class="row no-gutters">-->

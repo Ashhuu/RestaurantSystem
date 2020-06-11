@@ -20,10 +20,18 @@ def register(request):
                 error = "The username already exists in the database"
             elif models.UserDetails.objects.filter(email=data['email']).exists():
                 error = "The email already exists in the database"
+            elif data['type'].lower() == 'manager':
+                if models.UserDetails.objects.filter(type='manager').count() > 3:
+                    error = "No more than 2 manager accounts can be active"
             if error is None:
+                password = data['password']
                 data['password'] = make_password(data['password'])
                 ud = models.UserDetails(**data)
                 ud.save()
+                user = authenticate(request, username=data['username'], password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('home')
     return render(request, 'details/register.html', {'form': form, 'error': error})
 
 
